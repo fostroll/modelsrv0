@@ -30,7 +30,9 @@ with_intents=True, probs=True, threshold=.5, only_true=False)`. Scripts
 definition.
 
 4. Put the model in the directory `model0` (or change the `model_name` in
-`config.yaml`) and start `run.sh` or `run.bat`.
+`config.yaml`).
+
+5. Edit `run.sh` or `run.bat` and start the server.
 
 ## License
 
