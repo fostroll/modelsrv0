@@ -8,6 +8,7 @@ The simple FastAPI wrapper for ML model.
 pip install fastapi
 pip install uvicorn
 pip install passlib
+pip install python-jose
 ```
 
 ## Usage
