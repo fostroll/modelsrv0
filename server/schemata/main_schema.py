@@ -2,7 +2,7 @@ from enum import Enum
 from ipaddress import IPv4Address
 import os
 from pydantic import DirectoryPath, FilePath, root_validator, validator
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Union
 
 from .base_schema import _BaseModel, check_unique
 from .user_schema import Users

@@ -12,7 +12,7 @@ requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://hugg
 During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
-  File "server/main.py", line 33, in reload_model
+  File "C:\prj-git\_mine\modelsrv0\server\main.py", line 33, in reload_model
     model_load(schemata.config.model_name,
   File "C:\prj-git\_mine\modelsrv0\server\model\spec.py", line 43, in model_load
     model = Model.load(path)
