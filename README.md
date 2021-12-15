@@ -5,6 +5,7 @@ The simple FastAPI wrapper for ML model.
 ## Requirements
 
 ```sh
+pip install python-multipart
 pip install fastapi
 pip install uvicorn
 pip install passlib
