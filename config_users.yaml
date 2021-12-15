@@ -1,10 +1,10 @@
 admin:
-  password: "$6$rounds=656000$r0vv3EazpATeMQLX$ys38gZ1JbWM//5n0qj0/y\
-    K1zr6mOx2s0GCX9Alof362Jr31VGMlyjyAlQS0BoZxYEKd67/2l7ldbgjJ1JtjQQ1"
+  password: "$6$rounds=656000$ZOVspsCwH0q969yM$9G18yx4STUMnJsdDXLRfJ\
+    qdbDLwe2gptkrRU4k9.O7nQctkY90vLWeWquYHprPNO1kBITenksXkhCTCiB2hGV1"
   full_name: Admin
   admin: true
 
 predict:
-  password: "$6$rounds=656000$r0vv3EazpATeMQLX$ys38gZ1JbWM//5n0qj0/y\
-    K1zr6mOx2s0GCX9Alof362Jr31VGMlyjyAlQS0BoZxYEKd67/2l7ldbgjJ1JtjQQ1"
+  password: "$6$rounds=656000$ls/TQLvIaeoVDxdj$tbyHkJ53/2YkYQKPnm6yQ\
+    kxDdy8zk3O.oPzHYSZ2dlX6UBsFLgnSBN4vEoTzoST/qpsk1ihoC8jQn4T.cAuI61"
   full_name: Predict

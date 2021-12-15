@@ -47,7 +47,7 @@ def load_router(model: str = '*',
         app_.mount(STATIC_PATH,
                    StaticFiles(directory='static'), name='static')
 
-    check_user = auth_make_routes(app_, schemata.config)
+    check_user = auth_make_routes(app_)
 
     def check_admin(current_user: schemata.UserData = Security(check_user)):
         if not current_user.admin:

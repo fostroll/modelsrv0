@@ -9,6 +9,7 @@ from pydantic import BaseModel, ValidationError
 from typing import List, Optional
 
 import response_examples
+import schemata
 from schemata import UserData, UserDataView
 
 
@@ -19,8 +20,8 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
-def make_routes(router, config, login_path=LOGIN_PATH):
-    pwd_context = CryptContext(schemes=config.password_hash_schemes,
+def make_routes(router, login_path=LOGIN_PATH):
+    pwd_context = CryptContext(schemes=schemata.config.password_hash_schemes,
                                deprecated='auto')
 
     oauth2_scheme = OAuth2PasswordBearer(
@@ -35,7 +36,7 @@ def make_routes(router, config, login_path=LOGIN_PATH):
         return pwd_context.hash(password)
 
     def get_user(username: str) -> Optional[str]:
-        return config.users.get(username)
+        return schemata.config.users.get(username)
 
     def authenticate_user(username: str, password: str) -> bool:
         user = get_user(username)
@@ -49,8 +50,8 @@ def make_routes(router, config, login_path=LOGIN_PATH):
         else:
             expire = datetime.utcnow() + timedelta(minutes=15)
         to_encode.update({'exp': expire})
-        encoded_jwt = jwt.encode(to_encode, config.jwt_secret_key,
-                                 algorithm=config.jwt_algorithm)
+        encoded_jwt = jwt.encode(to_encode, schemata.config.jwt_secret_key,
+                                 algorithm=schemata.config.jwt_algorithm)
         return encoded_jwt
 
     async def get_current_user(
@@ -65,8 +66,8 @@ def make_routes(router, config, login_path=LOGIN_PATH):
                             detail='Could not validate credential',
                             headers={'WWW-Authenticate': authenticate_value})
         try:
-            payload = jwt.decode(token, config.jwt_secret_key,
-                                 algorithms=[config.jwt_algorithm],
+            payload = jwt.decode(token, schemata.config.jwt_secret_key,
+                                 algorithms=[schemata.config.jwt_algorithm],
                                  audience=request.client.host,
                                  options={'require_aud': True,
                                           'require_sub': True})
@@ -101,10 +102,11 @@ def make_routes(router, config, login_path=LOGIN_PATH):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail='Incorrect username or password')
         for scope in form_data.scopes:
-            if scope not in config.users[form_data.username].scopes:
+            if scope not in schemata.config.users[form_data.username].scopes:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                     detail='Wrong scope set')
-        access_token_expires = timedelta(minutes=config.jwt_expire_minutes)
+        access_token_expires = \
+            timedelta(minutes=schemata.config.jwt_expire_minutes)
         access_token = create_access_token(
             data={'sub': form_data.username, 'aud': [request.client.host],
                   'scopes': form_data.scopes},

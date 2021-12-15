@@ -43,9 +43,9 @@ class _BaseModel(BaseModel, extra=Extra.forbid, json_loads=yaml.safe_load):
         if is_path:
             cls.config_path = config  # NB
         try:
-            return cls.parse_obj(config) if isinstance(config, Json) else \
-                   cls.parse_file(config) if is_path else \
-                   cls.parse_raw(config)
+            config = cls.parse_obj(config) if isinstance(config, Json) else \
+                     cls.parse_file(config) if is_path else \
+                     cls.parse_raw(config)
         except RuntimeError as e:
             raise e
         except Exception as e:
@@ -56,6 +56,7 @@ class _BaseModel(BaseModel, extra=Extra.forbid, json_loads=yaml.safe_load):
                                  + err)
             else:
                 raise e
+        return config
 
     @root_validator
     def _root_validator(cls, values):
