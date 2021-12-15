@@ -1,0 +1,10 @@
+admin:
+  password: "$6$rounds=656000$r0vv3EazpATeMQLX$ys38gZ1JbWM//5n0qj0/y\
+    K1zr6mOx2s0GCX9Alof362Jr31VGMlyjyAlQS0BoZxYEKd67/2l7ldbgjJ1JtjQQ1"
+  full_name: Admin
+  admin: true
+
+predict:
+  password: "$6$rounds=656000$r0vv3EazpATeMQLX$ys38gZ1JbWM//5n0qj0/y\
+    K1zr6mOx2s0GCX9Alof362Jr31VGMlyjyAlQS0BoZxYEKd67/2l7ldbgjJ1JtjQQ1"
+  full_name: Predict
