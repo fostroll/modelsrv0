@@ -1,5 +1,6 @@
 #!python
 #-*- coding: utf-8 -*-
+import argparse
 from fastapi import BackgroundTasks, Body, Depends, FastAPI, HTTPException, \
                     Response, Security, status
 from fastapi.responses import FileResponse, JSONResponse
@@ -111,4 +112,15 @@ reload_model()
 if __name__ == '__main__':
     #https://www.uvicorn.org/settings/
     #uvicorn.run(app, host='127.0.0.1', port=8000)
-    uvicorn.run('main:app', host='127.0.0.1', port=8000, reload=True, workers=1)
+    argparser = argparse.ArgumentParser(add_help=True)
+    argparser.add_argument('--host', dest='host', type=str,
+                           default='127.0.0.1', help='The server address')
+    argparser.add_argument('--port', dest='port', type=int,
+                           default=8000, help='The server port')
+    argparser.add_argument('--reload', dest='reload', type=bool,
+                           default=True, help='Whethere we need a reload')
+    argparser.add_argument('--workers', dest='workers', type=int,
+                           default=1, help='The number of workers')
+    args = argparser.parse_args()
+    uvicorn.run('main:app', host=args.host, port=args.port,
+                reload=args.reload, workers=args.workers)
