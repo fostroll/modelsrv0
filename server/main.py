@@ -112,12 +112,23 @@ reload_model()
 if __name__ == '__main__':
     #https://www.uvicorn.org/settings/
     #uvicorn.run(app, host='127.0.0.1', port=8000)
+
+    def str2bool(v):
+        if isinstance(v, bool):
+            return v
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Boolean value expected.')
+
     argparser = argparse.ArgumentParser(add_help=True)
     argparser.add_argument('--host', dest='host', type=str,
                            default='127.0.0.1', help='The server address')
     argparser.add_argument('--port', dest='port', type=int,
                            default=8000, help='The server port')
-    argparser.add_argument('--reload', dest='reload', type=bool,
+    argparser.add_argument('--reload', dest='reload', type=str2bool,
                            default=True, help='Whethere we need a reload')
     argparser.add_argument('--workers', dest='workers', type=int,
                            default=1, help='The number of workers')
