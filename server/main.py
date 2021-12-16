@@ -98,7 +98,9 @@ def load_router():
                                 detail='Reloading is still in progress')
         return FileResponse(LOADING_LOG)
 
-    @app_.post('/predict', tags=[MODEL_TAG])
+    @app_.post('/predict',
+               dependencies=[Security(check_user)],
+               tags=[MODEL_TAG])
     async def predict(text: str = Body(...),
                       with_intents: bool = True, probs: bool = True,
                       threshold: float = .5, only_true: bool = False):
