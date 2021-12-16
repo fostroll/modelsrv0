@@ -12,7 +12,7 @@ import uvicorn
 
 from auth import make_routes as auth_make_routes
 from const import CONFIG_FN, ADMIN_PATH_PREFIX, PREDICT_PATH_PREFIX, \
-                  STATIC_PATH, LOADING_LOG
+                  STATIC_PATH, ADMIN_TAG, MODEL_TAG, LOADING_LOG
 from model import model_load, model_predict
 import response_examples
 import schemata
@@ -30,18 +30,20 @@ def reload_model():
     with reloading_lock,\
          open(LOADING_LOG, 'wt', encoding='utf-8') as f:
         try:
-            model_load(schemata.config.model_name,
-                       device=schemata.config.model_device)
+            model_load(schemata.config.model.name,
+                       device=schemata.config.model.device)
         except Exception as e:
             print(traceback.format_exc())
             print(traceback.format_exc(), file=f)
         else:
             print('The model is loaded.', file=f)
 
-def load_router(model: str = '*',
-                delete_only: bool = False, full: bool = False):
+def load_router():
 
-    app_ = FastAPI(responses={**response_examples.HTTP_400_BAD_REQUEST,
+    app_ = FastAPI(title=schemata.config.model.swagger_title,
+                   version=schemata.config.model.swagger_version,
+                   description=schemata.config.model.swagger_description,
+                   responses={**response_examples.HTTP_400_BAD_REQUEST,
                               **response_examples.HTTP_401_UNAUTHORIZED})
     if STATIC_PATH:
         app_.mount(STATIC_PATH,
@@ -61,9 +63,9 @@ def load_router(model: str = '*',
               responses={**response_examples.HTTP_202_ACCEPTED,
                          **response_examples.HTTP_500_INTERNAL_SERVER_ERROR,
                          **response_examples.HTTP_503_SERVICE_UNAVAILABLE},
-              dependencies=[Depends(check_admin)])
+              #dependencies=[Depends(check_admin)],
+              tags=[ADMIN_TAG])
     async def admin_reload(background_tasks: BackgroundTasks):
-
         with new_config_lock:
             if reloading_lock.locked():
                 raise HTTPException(status_code=\
@@ -79,7 +81,7 @@ def load_router(model: str = '*',
                         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                         detail=str(e).split('\n')
                     )
-
+                load_router()
                 background_tasks.add_task(reload_model)
                 return JSONResponse('The request is processing',
                                     status_code=status.HTTP_202_ACCEPTED)
@@ -87,7 +89,8 @@ def load_router(model: str = '*',
     @app_.get(f'{ADMIN_PATH_PREFIX}/reload/status',
               name='the model reloading status',
               responses={**response_examples.HTTP_503_SERVICE_UNAVAILABLE},
-              dependencies=[Depends(check_admin)])
+              dependencies=[Depends(check_admin)],
+              tags=[ADMIN_TAG])
     async def admin_reload_check(t: int):
         if reloading_lock.locked():
             raise HTTPException(status_code=\
@@ -95,7 +98,7 @@ def load_router(model: str = '*',
                                 detail='Reloading is still in progress')
         return FileResponse(LOADING_LOG)
 
-    @app_.post('/predict')
+    @app_.post('/predict', tags=[MODEL_TAG])
     async def predict(text: str = Body(...),
                       with_intents: bool = True, probs: bool = True,
                       threshold: float = .5, only_true: bool = False):

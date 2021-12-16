@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 from typing import List, Optional
 
+from const import AUTH_TAG
 import response_examples
 import schemata
 from schemata import UserData, UserDataView
@@ -95,7 +96,7 @@ def make_routes(router, login_path=LOGIN_PATH):
                                 detail='Inactive user')
         return current_user
 
-    @router.post(login_path, response_model=Token)
+    @router.post(login_path, response_model=Token, tags=[AUTH_TAG])
     async def login(request: Request,
                     form_data: OAuth2PasswordRequestForm = Depends()):
         if not authenticate_user(form_data.username, form_data.password):
@@ -114,7 +115,7 @@ def make_routes(router, login_path=LOGIN_PATH):
         )
         return {'access_token': access_token, 'token_type': 'bearer'}
 
-    @router.get('/users/me/', response_model=UserDataView)
+    @router.get('/users/me/', response_model=UserDataView, tags=[AUTH_TAG])
     async def users_me(current_user: UserData = Security(check_user)):
         return current_user
 
