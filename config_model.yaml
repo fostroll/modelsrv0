@@ -1,0 +1,8 @@
+directory: model
+format: torch
+name: model0
+device: cpu
+
+swagger_title: Model Title
+swagger_version: 1.0.0
+swagger_description: 
