@@ -63,7 +63,7 @@ def load_router():
               responses={**response_examples.HTTP_202_ACCEPTED,
                          **response_examples.HTTP_500_INTERNAL_SERVER_ERROR,
                          **response_examples.HTTP_503_SERVICE_UNAVAILABLE},
-              #dependencies=[Depends(check_admin)],
+              dependencies=[Depends(check_admin)],
               tags=[ADMIN_TAG])
     async def admin_reload(background_tasks: BackgroundTasks):
         with new_config_lock:

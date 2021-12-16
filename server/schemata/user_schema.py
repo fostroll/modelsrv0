@@ -8,7 +8,7 @@ class UserData(_BaseModel):
     password: str
     full_name: str
     admin: bool = False
-    scopes: Union[str, List[str]] = []
+    #scopes: Union[str, List[str]] = []
     disabled: bool = False
 
 class Users(_BaseModel):
@@ -17,5 +17,5 @@ class Users(_BaseModel):
 class UserDataView(BaseModel):
     full_name: str
     admin: bool
-    scopes: Union[str, List[str]]
+    #scopes: Union[str, List[str]]
     disabled: bool
